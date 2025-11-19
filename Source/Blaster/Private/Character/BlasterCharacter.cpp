@@ -1,0 +1,86 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "Character/BlasterCharacter.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
+
+// Sets default values
+ABlasterCharacter::ABlasterCharacter()
+{
+ 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+	// CreateDefaultSubobject: 在构造函数中创建组件对象的标准方法
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	// 设置弹簧臂的附着点，GetMesh:获取角色的谷歌网格体组件，这里相机会跟随角色的模型移动
+	CameraBoom->SetupAttachment(GetMesh());
+	// 弹簧臂的长度，即相机与角色之间的距离
+	CameraBoom->TargetArmLength = 600.f;
+	// 弹簧臂跟随玩家控制器的旋转，即实现鼠标控制相机方向
+	CameraBoom->bUsePawnControlRotation = true;
+
+	// 创建相机组件，玩家实际看到的视角
+	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
+	// 将相机附着在弹簧臂的末端
+	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	FollowCamera->bUsePawnControlRotation = false;
+}
+
+// Called when the game starts or when spawned
+void ABlasterCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	
+}
+
+// Called to bind functionality to input
+void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+
+	PlayerInputComponent->BindAxis("MoveFoward", this, &ThisClass::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &ThisClass::MoveRight);
+	PlayerInputComponent->BindAxis("Turn", this, &ThisClass::Turn);
+	PlayerInputComponent->BindAxis("LookUp", this, &ThisClass::LookUp);
+	
+}
+
+void ABlasterCharacter::MoveForward(float Value){
+	if (Controller != nullptr && Value != 0.f) {
+		// Controller->GetControlRotation() 获取控制器的当权旋转（相机朝向）
+		// Yaw 水平旋转方向（左右摇头），即使用该方向作为移动方向
+		const FRotator YawRotation(0.f, Controller->GetControlRotation().Yaw, 0.f);
+		// 将新建的旋转转换为一个旋转矩阵，并获取X轴方向（前向方向）
+		const FVector Direction(FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X));
+		AddMovementInput(Direction, Value);
+	}
+}
+
+void ABlasterCharacter::MoveRight(float Value){
+	if (Controller != nullptr && Value != 0.f) {
+		// Yaw 水平旋转方向（左右摇头），即使用该方向作为移动方向
+		const FRotator YawRotation(0.f, Controller->GetControlRotation().Yaw, 0.f);
+		// 将新建的旋转转换为一个旋转矩阵，并获取Y轴方向（右向方向）
+		const FVector Direction(FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y));
+		AddMovementInput(Direction, Value);
+	}
+} 
+
+void ABlasterCharacter::Turn(float Value){
+	AddControllerYawInput(Value);
+}
+
+void ABlasterCharacter::LookUp(float Value){
+	AddControllerPitchInput(Value);
+}
+
+// Called every frame
+void ABlasterCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
