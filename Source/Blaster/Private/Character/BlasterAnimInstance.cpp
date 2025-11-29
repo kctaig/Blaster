@@ -25,6 +25,7 @@ void UBlasterAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	FVector Velocity = BlasterCharacter->GetVelocity();
 	Velocity.Z = 0.f;
 	Speed = Velocity.Size();
+
 	bIsInAir = BlasterCharacter->GetCharacterMovement()->IsFalling();
 	bIsAccelerating = BlasterCharacter->GetCharacterMovement()->GetCurrentAcceleration().Size() > 0 ? true : false;
 	bWeaponEquiped = BlasterCharacter->IsWeaponEquipped();
@@ -44,4 +45,7 @@ void UBlasterAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	const float Target = Delta.Yaw / DeltaTime;
 	const float Interp = FMath::FInterpTo(Lean, Target, DeltaTime, 6.f);
 	Lean = FMath::Clamp(Interp, -90.f, 90.f);
+
+	AO_Yaw = BlasterCharacter->GetAO_Yaw();
+	AO_Pitch = BlasterCharacter->GetAO_Pitch();
 }
