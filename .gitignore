@@ -1,9 +1,10 @@
+.idea/
 .vs/
 .vscode/
 Build/
-Binaries/
+**/Binaries/
 Saved/
-Intermediate/
+**/Intermediate/
 DerivedDataCache/
 .vsconfig
 *.sln
