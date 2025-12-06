@@ -18,18 +18,12 @@ ABlasterCharacter::ABlasterCharacter() {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// CreateDefaultSubobject: �ڹ��캯���д����������ı�׼����
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	// ���õ��ɱ۵ĸ��ŵ㣬GetMesh:��ȡ��ɫ�Ĺȸ�������������������������ɫ��ģ���ƶ�
 	CameraBoom->SetupAttachment(GetMesh());
-	// ���ɱ۵ĳ��ȣ���������ɫ֮��ľ���
 	CameraBoom->TargetArmLength = 600.f;
-	// ���ɱ۸�����ҿ���������ת����ʵ���������������
 	CameraBoom->bUsePawnControlRotation = true;
 
-	// ���������������ʵ�ʿ������ӽ�
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	// ����������ڵ��ɱ۵�ĩ��
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
@@ -52,7 +46,6 @@ ABlasterCharacter::ABlasterCharacter() {
 	MinNetUpdateFrequency = 33.f;
 }
 
-// ����ָ����Щ������Ҫ��������Ϸ��ͬ�������пͻ��ˡ�
 void ABlasterCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
@@ -109,10 +102,7 @@ void ABlasterCharacter::PlayFireMontage(bool bAiming) {
 
 void ABlasterCharacter::MoveForward(float Value) {
 	if (Controller != nullptr && Value != 0.f) {
-		// Controller->GetControlRotation() ��ȡ�������ĵ�Ȩ��ת���������
-		// Yaw ˮƽ��ת��������ҡͷ������ʹ�ø÷�����Ϊ�ƶ�����
 		const FRotator YawRotation(0.f, Controller->GetControlRotation().Yaw, 0.f);
-		// ���½�����תת��Ϊһ����ת���󣬲���ȡX�᷽��ǰ����
 		const FVector Direction(FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X));
 		AddMovementInput(Direction, Value);
 	}
@@ -120,9 +110,7 @@ void ABlasterCharacter::MoveForward(float Value) {
 
 void ABlasterCharacter::MoveRight(float Value) {
 	if (Controller != nullptr && Value != 0.f) {
-		// Yaw ˮƽ��ת��������ҡͷ������ʹ�ø÷�����Ϊ�ƶ�����
 		const FRotator YawRotation(0.f, Controller->GetControlRotation().Yaw, 0.f);
-		// ���½�����תת��Ϊһ����ת���󣬲���ȡY�᷽��������
 		const FVector Direction(FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y));
 		AddMovementInput(Direction, Value);
 	}
@@ -142,7 +130,6 @@ void ABlasterCharacter::EquipButtonPressed() {
 			Combat->EquipWeapon(OverlappingWeapon);
 		}
 		else {
-			// �ͻ��˵��÷�����ִ��
 			ServerEquipButtonPressed();
 		}
 	}

@@ -18,15 +18,12 @@ AWeapon::AWeapon() {
 
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
 	WeaponMesh->SetupAttachment(RootComponent);
-	// �� WeaponMesh��Ϊ�������AreaSphere����������
 	SetRootComponent(WeaponMesh);
-
-	// WeaponMesh: ����ģ�ͣ��������������ײ
+	
 	WeaponMesh->SetCollisionResponseToAllChannels(ECR_Block);
 	WeaponMesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-	// AreaSphere: ���ɼ��������ڼ����ҽӽ�
+	
 	AreaSphere = CreateDefaultSubobject<USphereComponent>(TEXT("AreaSphere"));
 	AreaSphere->SetupAttachment(RootComponent);
 	AreaSphere->SetCollisionResponseToAllChannels(ECR_Ignore);
@@ -87,7 +84,6 @@ void AWeapon::SetWeaponState(EWeaponState State) {
 	WeaponState = State;
 	switch (WeaponState) {
 	case EWeaponState::EWS_Equipped:
-		// ���������Widget����ֹ��ײ
 		ShowPickupWidget(false);
 		AreaSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		break;
