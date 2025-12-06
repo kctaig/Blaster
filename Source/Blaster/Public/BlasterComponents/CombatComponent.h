@@ -7,6 +7,8 @@
 #include "CombatComponent.generated.h"
 
 
+#define TRACE_LENGTH 80000.f
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class BLASTER_API UCombatComponent : public UActorComponent {
 	GENERATED_BODY()
@@ -37,6 +39,8 @@ protected:
 
 	UFUNCTION(NetMulticast, Reliable)
 	void MultiCastFire();
+
+	void TraceUnderCrosshairs(FHitResult& TraceHitResult);
 
 private:
 	class ABlasterCharacter* Character;
