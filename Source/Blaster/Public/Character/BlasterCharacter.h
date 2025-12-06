@@ -8,8 +8,7 @@
 #include "BlasterCharacter.generated.h"
 
 UCLASS()
-class BLASTER_API ABlasterCharacter : public ACharacter
-{
+class BLASTER_API ABlasterCharacter : public ACharacter {
 	GENERATED_BODY()
 
 public:
@@ -50,7 +49,7 @@ private:
 	UPROPERTY(ReplicatedUsing = OnRep_OverlappingWeapon)
 	class AWeapon* OverlappingWeapon;
 
-	UFUNCTION() 
+	UFUNCTION()
 	void OnRep_OverlappingWeapon(AWeapon* LastWeapon);
 
 	UPROPERTY(VisibleAnywhere)

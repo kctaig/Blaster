@@ -14,23 +14,22 @@
 #include "Character/BlasterAnimInstance.h"
 
 // Sets default values
-ABlasterCharacter::ABlasterCharacter()
-{
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ABlasterCharacter::ABlasterCharacter() {
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// CreateDefaultSubobject: ÔÚ¹¹Ôìº¯ÊýÖÐ´´½¨×é¼þ¶ÔÏóµÄ±ê×¼·½·¨
+	// CreateDefaultSubobject: ï¿½Ú¹ï¿½ï¿½ìº¯ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½×¼ï¿½ï¿½ï¿½ï¿½
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	// ÉèÖÃµ¯»É±ÛµÄ¸½×Åµã£¬GetMesh:»ñÈ¡½ÇÉ«µÄ¹È¸èÍø¸ñÌå×é¼þ£¬ÕâÀïÏà»ú»á¸úËæ½ÇÉ«µÄÄ£ÐÍÒÆ¶¯
+	// ï¿½ï¿½ï¿½Ãµï¿½ï¿½É±ÛµÄ¸ï¿½ï¿½Åµã£¬GetMesh:ï¿½ï¿½È¡ï¿½ï¿½É«ï¿½Ä¹È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½Ä£ï¿½ï¿½ï¿½Æ¶ï¿½
 	CameraBoom->SetupAttachment(GetMesh());
-	// µ¯»É±ÛµÄ³¤¶È£¬¼´Ïà»úÓë½ÇÉ«Ö®¼äµÄ¾àÀë
+	// ï¿½ï¿½ï¿½É±ÛµÄ³ï¿½ï¿½È£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«Ö®ï¿½ï¿½Ä¾ï¿½ï¿½ï¿½
 	CameraBoom->TargetArmLength = 600.f;
-	// µ¯»É±Û¸úËæÍæ¼Ò¿ØÖÆÆ÷µÄÐý×ª£¬¼´ÊµÏÖÊó±ê¿ØÖÆÏà»ú·½Ïò
+	// ï¿½ï¿½ï¿½É±Û¸ï¿½ï¿½ï¿½ï¿½ï¿½Ò¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	CameraBoom->bUsePawnControlRotation = true;
 
-	// ´´½¨Ïà»ú×é¼þ£¬Íæ¼ÒÊµ¼Ê¿´µ½µÄÊÓ½Ç
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½Ê¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó½ï¿½
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	// ½«Ïà»ú¸½×ÅÔÚµ¯»É±ÛµÄÄ©¶Ë
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½É±Ûµï¿½Ä©ï¿½ï¿½
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
@@ -44,8 +43,8 @@ ABlasterCharacter::ABlasterCharacter()
 	Combat->SetIsReplicated(true);
 
 	GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
-	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
-	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 0.f, 850.f);
 
 	TurningInPlace = ETurningInPlace::ETIP_NotTurning;
@@ -53,28 +52,23 @@ ABlasterCharacter::ABlasterCharacter()
 	MinNetUpdateFrequency = 33.f;
 }
 
-// ÓÃÓÚÖ¸¶¨ÄÄÐ©±äÁ¿ÐèÒªÔÚÍøÂçÓÎÏ·ÖÐÍ¬²½µ½ËùÓÐ¿Í»§¶Ë¡£
+// ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Ð©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï·ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¿Í»ï¿½ï¿½Ë¡ï¿½
 void ABlasterCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME_CONDITION(ABlasterCharacter, OverlappingWeapon, COND_OwnerOnly);
-
 }
 
-void ABlasterCharacter::BeginPlay()
-{
+void ABlasterCharacter::BeginPlay() {
 	Super::BeginPlay();
-	
 }
 
-void ABlasterCharacter::Tick(float DeltaTime)
-{
+void ABlasterCharacter::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 	AimOffset(DeltaTime);
 }
 
-void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
+void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ABlasterCharacter::Jump);
@@ -86,24 +80,23 @@ void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 	PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &ABlasterCharacter::EquipButtonPressed);
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ABlasterCharacter::CrouchButtonPressed);
-	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &ABlasterCharacter::AimButtonPressed);	
+	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &ABlasterCharacter::AimButtonPressed);
 	PlayerInputComponent->BindAction("Aim", IE_Released, this, &ABlasterCharacter::AimButtonReleased);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ABlasterCharacter::FireButtonPressed);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ABlasterCharacter::FireButtonReleased);
-
 }
 
-void ABlasterCharacter::PostInitializeComponents()
-{
+void ABlasterCharacter::PostInitializeComponents() {
 	Super::PostInitializeComponents();
 	if (Combat) {
 		Combat->Character = this;
 	}
 }
 
-void ABlasterCharacter::PlayFireMontage(bool bAiming)
-{
-	if (Combat == nullptr || Combat->EquippedWeapon == nullptr) return;
+void ABlasterCharacter::PlayFireMontage(bool bAiming) {
+	if (Combat == nullptr || Combat->EquippedWeapon == nullptr) {
+		return;
+	}
 
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && FireWeaponMontage) {
@@ -112,59 +105,56 @@ void ABlasterCharacter::PlayFireMontage(bool bAiming)
 		SectionName = bAiming ? FName("RifleAim") : FName("RifleHip");
 		AnimInstance->Montage_JumpToSection(SectionName);
 	}
- }
+}
 
-void ABlasterCharacter::MoveForward(float Value){
+void ABlasterCharacter::MoveForward(float Value) {
 	if (Controller != nullptr && Value != 0.f) {
-		// Controller->GetControlRotation() »ñÈ¡¿ØÖÆÆ÷µÄµ±È¨Ðý×ª£¨Ïà»ú³¯Ïò£©
-		// Yaw Ë®Æ½Ðý×ª·½Ïò£¨×óÓÒÒ¡Í·£©£¬¼´Ê¹ÓÃ¸Ã·½Ïò×÷ÎªÒÆ¶¯·½Ïò
+		// Controller->GetControlRotation() ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½È¨ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// Yaw Ë®Æ½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò¡Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã¸Ã·ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½
 		const FRotator YawRotation(0.f, Controller->GetControlRotation().Yaw, 0.f);
-		// ½«ÐÂ½¨µÄÐý×ª×ª»»ÎªÒ»¸öÐý×ª¾ØÕó£¬²¢»ñÈ¡XÖá·½Ïò£¨Ç°Ïò·½Ïò£©
+		// ï¿½ï¿½ï¿½Â½ï¿½ï¿½ï¿½ï¿½ï¿½×ª×ªï¿½ï¿½ÎªÒ»ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ó£¬²ï¿½ï¿½ï¿½È¡Xï¿½á·½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½
 		const FVector Direction(FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X));
 		AddMovementInput(Direction, Value);
 	}
 }
 
-void ABlasterCharacter::MoveRight(float Value){
+void ABlasterCharacter::MoveRight(float Value) {
 	if (Controller != nullptr && Value != 0.f) {
-		// Yaw Ë®Æ½Ðý×ª·½Ïò£¨×óÓÒÒ¡Í·£©£¬¼´Ê¹ÓÃ¸Ã·½Ïò×÷ÎªÒÆ¶¯·½Ïò
+		// Yaw Ë®Æ½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò¡Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã¸Ã·ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½
 		const FRotator YawRotation(0.f, Controller->GetControlRotation().Yaw, 0.f);
-		// ½«ÐÂ½¨µÄÐý×ª×ª»»ÎªÒ»¸öÐý×ª¾ØÕó£¬²¢»ñÈ¡YÖá·½Ïò£¨ÓÒÏò·½Ïò£©
+		// ï¿½ï¿½ï¿½Â½ï¿½ï¿½ï¿½ï¿½ï¿½×ª×ªï¿½ï¿½ÎªÒ»ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ó£¬²ï¿½ï¿½ï¿½È¡Yï¿½á·½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		const FVector Direction(FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y));
 		AddMovementInput(Direction, Value);
 	}
-} 
+}
 
-void ABlasterCharacter::Turn(float Value){
+void ABlasterCharacter::Turn(float Value) {
 	AddControllerYawInput(Value);
 }
 
-void ABlasterCharacter::LookUp(float Value){
+void ABlasterCharacter::LookUp(float Value) {
 	AddControllerPitchInput(Value);
 }
 
-void ABlasterCharacter::EquipButtonPressed()
-{
+void ABlasterCharacter::EquipButtonPressed() {
 	if (Combat) {
 		if (HasAuthority()) {
 			Combat->EquipWeapon(OverlappingWeapon);
 		}
 		else {
-			// ¿Í»§¶Ëµ÷ÓÃ·þÎñÆ÷Ö´ÐÐ
+			// ï¿½Í»ï¿½ï¿½Ëµï¿½ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½
 			ServerEquipButtonPressed();
 		}
 	}
 }
 
-void ABlasterCharacter::ServerEquipButtonPressed_Implementation()
-{
+void ABlasterCharacter::ServerEquipButtonPressed_Implementation() {
 	if (Combat) {
 		Combat->EquipWeapon(OverlappingWeapon);
 	}
 }
 
-void ABlasterCharacter::CrouchButtonPressed()
-{
+void ABlasterCharacter::CrouchButtonPressed() {
 	if (bIsCrouched) {
 		UnCrouch();
 	}
@@ -173,23 +163,22 @@ void ABlasterCharacter::CrouchButtonPressed()
 	}
 }
 
-void ABlasterCharacter::AimButtonPressed()
-{
+void ABlasterCharacter::AimButtonPressed() {
 	if (Combat) {
 		Combat->SetAiming(true);
-	 }
+	}
 }
 
-void ABlasterCharacter::AimButtonReleased()
-{
+void ABlasterCharacter::AimButtonReleased() {
 	if (Combat) {
 		Combat->SetAiming(false);
 	}
 }
 
-void ABlasterCharacter::AimOffset(float DeltaTime)
-{
-	if (Combat && Combat->EquippedWeapon == nullptr) return;
+void ABlasterCharacter::AimOffset(float DeltaTime) {
+	if (Combat && Combat->EquippedWeapon == nullptr) {
+		return;
+	}
 	FVector Velocity = GetVelocity();
 	Velocity.Z = 0.f;
 	float Speed = Velocity.Size();
@@ -224,8 +213,7 @@ void ABlasterCharacter::AimOffset(float DeltaTime)
 	}
 }
 
-void ABlasterCharacter::Jump()
-{
+void ABlasterCharacter::Jump() {
 	if (bIsCrouched) {
 		UnCrouch();
 	}
@@ -234,22 +222,19 @@ void ABlasterCharacter::Jump()
 	}
 }
 
-void ABlasterCharacter::FireButtonPressed()
-{
+void ABlasterCharacter::FireButtonPressed() {
 	if (Combat) {
 		Combat->FireButtonPressed(true);
 	}
 }
 
-void ABlasterCharacter::FireButtonReleased()
-{
+void ABlasterCharacter::FireButtonReleased() {
 	if (Combat) {
 		Combat->FireButtonPressed(false);
 	}
 }
 
-void ABlasterCharacter::TurnInPlace(float DeltaTime)
-{
+void ABlasterCharacter::TurnInPlace(float DeltaTime) {
 	if (AO_Yaw > 90.f) {
 		TurningInPlace = ETurningInPlace::ETIP_Right;
 	}
@@ -266,8 +251,7 @@ void ABlasterCharacter::TurnInPlace(float DeltaTime)
 	}
 }
 
-void ABlasterCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
-{
+void ABlasterCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon) {
 	if (OverlappingWeapon) {
 		OverlappingWeapon->ShowPickupWidget(true);
 	}
@@ -276,8 +260,7 @@ void ABlasterCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
 	}
 }
 
-void ABlasterCharacter::SetOverlappingWeapon(AWeapon* Weapon)
-{
+void ABlasterCharacter::SetOverlappingWeapon(AWeapon* Weapon) {
 	if (OverlappingWeapon) {
 		OverlappingWeapon->ShowPickupWidget(false);
 	}
@@ -289,19 +272,17 @@ void ABlasterCharacter::SetOverlappingWeapon(AWeapon* Weapon)
 	}
 }
 
-bool ABlasterCharacter::IsWeaponEquipped()
-{
+bool ABlasterCharacter::IsWeaponEquipped() {
 	return (Combat && Combat->EquippedWeapon);
 }
 
-bool ABlasterCharacter::IsAiming()
-{
+bool ABlasterCharacter::IsAiming() {
 	return (Combat && Combat->bAiming);
 }
 
-AWeapon* ABlasterCharacter::GetEquippedWeapon()
-{
-	if(Combat == nullptr) return nullptr;
+AWeapon* ABlasterCharacter::GetEquippedWeapon() {
+	if (Combat == nullptr) {
+		return nullptr;
+	}
 	return Combat->EquippedWeapon;
 }
- 

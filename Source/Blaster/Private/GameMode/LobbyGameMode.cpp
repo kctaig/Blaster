@@ -4,8 +4,7 @@
 #include "GameMode/LobbyGameMode.h"
 #include "GameFramework/GameStateBase.h"
 
-void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
-{
+void ALobbyGameMode::PostLogin(APlayerController* NewPlayer) {
 	Super::PostLogin(NewPlayer);
 
 	int32 NumberOfPlayer = GameState.Get()->PlayerArray.Num();

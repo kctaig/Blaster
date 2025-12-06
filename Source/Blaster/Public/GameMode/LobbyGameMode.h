@@ -10,10 +10,8 @@
  * 
  */
 UCLASS()
-class BLASTER_API ALobbyGameMode : public AGameMode
-{
+class BLASTER_API ALobbyGameMode : public AGameMode {
 	GENERATED_BODY()
-	
 
 public:
 	virtual void PostLogin(APlayerController* NewPlayer) override;

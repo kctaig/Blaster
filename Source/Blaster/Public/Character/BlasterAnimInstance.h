@@ -11,10 +11,9 @@
  * 
  */
 UCLASS()
-class BLASTER_API UBlasterAnimInstance : public UAnimInstance
-{
+class BLASTER_API UBlasterAnimInstance : public UAnimInstance {
 	GENERATED_BODY()
-	 
+
 public:
 	virtual void NativeInitializeAnimation() override;
 	virtual void NativeUpdateAnimation(float DeltaTime) override;
@@ -22,7 +21,7 @@ public:
 private:
 	UPROPERTY(BlueprintReadOnly, Category = Character, meta = (AllowPrivateAccess = "true"))
 	class ABlasterCharacter* BlasterCharacter;
-	
+
 	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float Speed;
 	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))

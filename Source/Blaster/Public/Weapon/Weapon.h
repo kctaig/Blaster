@@ -16,11 +16,10 @@ enum class EWeaponState : uint8 {
 };
 
 UCLASS()
-class BLASTER_API AWeapon : public AActor
-{
+class BLASTER_API AWeapon : public AActor {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	AWeapon();
 
 	virtual void Tick(float DeltaTime) override;
@@ -47,7 +46,7 @@ protected:
 		AActor* OtherActor,
 		UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex
-		);
+	);
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
@@ -56,7 +55,7 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	class USphereComponent* AreaSphere;
 
-	// ·þÎñÆ÷ÐÞ¸ÄWeaponState,´¥·¢¿Í»§¶Ëµ÷ÓÃOnRep_WeaponState
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½WeaponState,ï¿½ï¿½ï¿½ï¿½ï¿½Í»ï¿½ï¿½Ëµï¿½ï¿½ï¿½OnRep_WeaponState
 	UPROPERTY(ReplicatedUsing = OnRep_WeaponState, VisibleAnywhere, Category = "Weapon Properties")
 	EWeaponState WeaponState;
 

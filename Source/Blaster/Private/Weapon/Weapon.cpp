@@ -10,108 +10,98 @@
 #include "Components/SkeletalMeshComponent.h"
 
 // Sets default values
-AWeapon::AWeapon()
-{
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+AWeapon::AWeapon() {
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	// if true, this actor wiil bt replicate to remote machine
 	bReplicates = true;
 
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
 	WeaponMesh->SetupAttachment(RootComponent);
-	// ÈÃ WeaponMesh×÷Îª¸ù×é¼þ£¬AreaSphereµÈÒÀ¸½ÓÚËû
+	// ï¿½ï¿½ WeaponMeshï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½AreaSphereï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	SetRootComponent(WeaponMesh);
 
-	// WeaponMesh: ¿ÉÊÓÄ£ÐÍ£¬µ«±ÜÃâÓëÍæ¼ÒÅö×²
-	WeaponMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
-	WeaponMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+	// WeaponMesh: ï¿½ï¿½ï¿½ï¿½Ä£ï¿½Í£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²
+	WeaponMesh->SetCollisionResponseToAllChannels(ECR_Block);
+	WeaponMesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	// AreaSphere: ²»¿É¼û£¬µ«ÓÃÓÚ¼ì²âÍæ¼Ò½Ó½ü
+	// AreaSphere: ï¿½ï¿½ï¿½É¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¼ï¿½ï¿½ï¿½ï¿½Ò½Ó½ï¿½
 	AreaSphere = CreateDefaultSubobject<USphereComponent>(TEXT("AreaSphere"));
 	AreaSphere->SetupAttachment(RootComponent);
-	AreaSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	AreaSphere->SetCollisionResponseToAllChannels(ECR_Ignore);
 	AreaSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	PickupWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("PickupWidget"));
 	PickupWidget->SetupAttachment(RootComponent);
 }
 
-void AWeapon::BeginPlay()
-{
+void AWeapon::BeginPlay() {
 	Super::BeginPlay();
 	PickupWidget->SetVisibility(false);
 
 	if (HasAuthority()) {
 		AreaSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-		AreaSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+		AreaSphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 		AreaSphere->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::OnSphereOverlap);
 		AreaSphere->OnComponentEndOverlap.AddDynamic(this, &AWeapon::OnSphereEndOverlap);
 	}
 }
 
-void AWeapon::Tick(float DeltaTime)
-{
+void AWeapon::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 }
 
-void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
+void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AWeapon, WeaponState);
 }
 
-void AWeapon::OnSphereOverlap(UPrimitiveComponent* OverLappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
+void AWeapon::OnSphereOverlap(UPrimitiveComponent* OverLappedComponent, AActor* OtherActor,
+                              UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+                              const FHitResult& SweepResult) {
 	ABlasterCharacter* BlasterCharacter = Cast<ABlasterCharacter>(OtherActor);
-	if (BlasterCharacter ) {
+	if (BlasterCharacter) {
 		BlasterCharacter->SetOverlappingWeapon(this);
 	}
 }
 
-void AWeapon::OnSphereEndOverlap(UPrimitiveComponent* OverLappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
+void AWeapon::OnSphereEndOverlap(UPrimitiveComponent* OverLappedComponent, AActor* OtherActor,
+                                 UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) {
 	ABlasterCharacter* BlasterCharacter = Cast<ABlasterCharacter>(OtherActor);
 	if (BlasterCharacter) {
 		BlasterCharacter->SetOverlappingWeapon(nullptr);
 	}
 }
 
-void AWeapon::OnRep_WeaponState()
-{
-	switch (WeaponState) 
-	{
-		case EWeaponState::EWS_Equipped:
-			ShowPickupWidget(false); // ¿Í»§¶ËÒþ²Ø
-			break;
+void AWeapon::OnRep_WeaponState() {
+	switch (WeaponState) {
+	case EWeaponState::EWS_Equipped:
+		ShowPickupWidget(false); // ï¿½Í»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		break;
 	}
 }
 
-void AWeapon::SetWeaponState(EWeaponState State)
-{
+void AWeapon::SetWeaponState(EWeaponState State) {
 	WeaponState = State;
-	switch (WeaponState)
-	{
+	switch (WeaponState) {
 	case EWeaponState::EWS_Equipped:
-		// ·þÎñ¶ËÒþ²ØWidget²¢½ûÖ¹Åö×²
-		ShowPickupWidget(false); 
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Widgetï¿½ï¿½ï¿½ï¿½Ö¹ï¿½ï¿½×²
+		ShowPickupWidget(false);
 		AreaSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		break;
 	}
 }
 
-void AWeapon::ShowPickupWidget(bool bShowWidget)
-{
+void AWeapon::ShowPickupWidget(bool bShowWidget) {
 	if (PickupWidget) {
-		PickupWidget->SetVisibility(bShowWidget); 
+		PickupWidget->SetVisibility(bShowWidget);
 	}
 }
 
-void AWeapon::Fire()
-{
+void AWeapon::Fire() {
 	if (FireAnimation) {
 		WeaponMesh->PlayAnimation(FireAnimation, false);
 	}
 }
-

@@ -11,9 +11,12 @@
 // Delcaring our own custom delegates for the Menu class o bind callbacks to 
 //
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMultiplayerOnCreateSessionCoplete, bool, bWasSuccessful);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FMultiplayerOnFindSessionsComplete, const TArray<FOnlineSessionSearchResult>& SessionResults, bool bWasSuccessful);
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(FMultiplayerOnFindSessionsComplete,
+                                     const TArray<FOnlineSessionSearchResult>& SessionResults, bool bWasSuccessful);
 DECLARE_MULTICAST_DELEGATE_OneParam(FMultiplayerOnJoinSessionComplete, EOnJoinSessionCompleteResult::Type Result);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMultiplayerOnDestroySessionComplete, bool, bWasSuccessful);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMultiplayerOnStartSessionComplete, bool, bWasSuccessful);
 
 
@@ -21,12 +24,12 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMultiplayerOnStartSessionComplete, 
  * 
  */
 UCLASS()
-class MULTIPLAYERSESSIONS_API UMultiplayerSessionsSubsystem : public UGameInstanceSubsystem
-{
+class MULTIPLAYERSESSIONS_API UMultiplayerSessionsSubsystem : public UGameInstanceSubsystem {
 	GENERATED_BODY()
+
 public:
 	UMultiplayerSessionsSubsystem();
-	 
+
 	//
 	// To handle session functionality. The Menu class will call these
 	//
@@ -46,7 +49,6 @@ public:
 	FMultiplayerOnStartSessionComplete MultiplayerOnStartSessionComplete;
 
 protected:
-
 	//
 	// Internal callbacks for the delegates we'll ad to the Online Session Interface delegate list.
 	// Thise don't need to be called outside this class.
@@ -66,7 +68,7 @@ private:
 	// To add to the Online Session Interface delegate list.
 	// We'll bind our MultiplayerSessionsSubsystem internal callbacks to these.
 	//
-	FOnCreateSessionCompleteDelegate CreateSessionCompleteDelegate; 
+	FOnCreateSessionCompleteDelegate CreateSessionCompleteDelegate;
 	FOnFindSessionsCompleteDelegate FindSessionsCompleteDelegate;
 	FOnJoinSessionCompleteDelegate JoinSessionCompleteDelegate;
 	FOnDestroySessionCompleteDelegate DestroySessionCompleteDelegate;
@@ -78,7 +80,7 @@ private:
 	FDelegateHandle DestroySessionCompleteDelegateHandle;
 	FDelegateHandle StartSessionCompleteDelegateHandle;
 
-	bool bCreateSessionOnDestroy{ false };
+	bool bCreateSessionOnDestroy{false};
 	int32 LastNumPublicConnections;
 	FString LastMatchType;
 };

@@ -7,28 +7,28 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Weapon/Weapon.h"
 
-void UBlasterAnimInstance::NativeInitializeAnimation()
-{
+void UBlasterAnimInstance::NativeInitializeAnimation() {
 	Super::NativeInitializeAnimation();
 
 	BlasterCharacter = Cast<ABlasterCharacter>(TryGetPawnOwner());
 }
 
-void UBlasterAnimInstance::NativeUpdateAnimation(float DeltaTime)
-{
+void UBlasterAnimInstance::NativeUpdateAnimation(float DeltaTime) {
 	Super::NativeUpdateAnimation(DeltaTime);
 
 	if (BlasterCharacter == nullptr) {
 		BlasterCharacter = Cast<ABlasterCharacter>(TryGetPawnOwner());
 	}
-	if (BlasterCharacter == nullptr) return;
+	if (BlasterCharacter == nullptr) {
+		return;
+	}
 
 	FVector Velocity = BlasterCharacter->GetVelocity();
 	Velocity.Z = 0.f;
 	Speed = Velocity.Size();
 
 	bIsInAir = BlasterCharacter->GetCharacterMovement()->IsFalling();
-	bIsAccelerating = BlasterCharacter->GetCharacterMovement()->GetCurrentAcceleration().Size() > 0 ? true : false;
+	bIsAccelerating = BlasterCharacter->GetCharacterMovement()->GetCurrentAcceleration().Size() > 0;
 	bWeaponEquiped = BlasterCharacter->IsWeaponEquipped();
 	EquippedWeapon = BlasterCharacter->GetEquippedWeapon();
 	bIsCrouched = BlasterCharacter->bIsCrouched;
@@ -37,7 +37,7 @@ void UBlasterAnimInstance::NativeUpdateAnimation(float DeltaTime)
 
 	// Offset Yaw for Strafing
 	FRotator AimRotation = BlasterCharacter->GetBaseAimRotation();
-	FRotator MovementRotation = UKismetMathLibrary::MakeRotFromX(BlasterCharacter->GetVelocity()); 
+	FRotator MovementRotation = UKismetMathLibrary::MakeRotFromX(BlasterCharacter->GetVelocity());
 	FRotator DeltaRot = UKismetMathLibrary::NormalizedDeltaRotator(MovementRotation, AimRotation);
 	DeltaRotation = FMath::RInterpTo(DeltaRotation, DeltaRot, DeltaTime, 6.f);
 	YawOffset = DeltaRotation.Yaw;
@@ -53,10 +53,11 @@ void UBlasterAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	AO_Pitch = BlasterCharacter->GetAO_Pitch();
 
 	if (bWeaponEquiped && EquippedWeapon && EquippedWeapon->GetWeaponMesh() && BlasterCharacter->GetMesh()) {
-		LeftHandTransform = EquippedWeapon->GetWeaponMesh()->GetSocketTransform(FName("LeftHandSocket"), ERelativeTransformSpace::RTS_World);
+		LeftHandTransform = EquippedWeapon->GetWeaponMesh()->GetSocketTransform(FName("LeftHandSocket"), RTS_World);
 		FVector OutPosition;
 		FRotator OutRotation;
-		BlasterCharacter->GetMesh()->TransformToBoneSpace(FName("hand_r"), LeftHandTransform.GetLocation(), FRotator::ZeroRotator, OutPosition, OutRotation);
+		BlasterCharacter->GetMesh()->TransformToBoneSpace(FName("hand_r"), LeftHandTransform.GetLocation(),
+		                                                  FRotator::ZeroRotator, OutPosition, OutRotation);
 		LeftHandTransform.SetLocation(OutPosition);
 		LeftHandTransform.SetRotation(FQuat(OutRotation));
 	}

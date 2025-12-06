@@ -7,11 +7,10 @@
 #include "Projectile.generated.h"
 
 UCLASS()
-class BLASTER_API AProjectile : public AActor
-{
+class BLASTER_API AProjectile : public AActor {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	AProjectile();
 	virtual void Tick(float DeltaTime) override;
 
@@ -21,8 +20,4 @@ protected:
 private:
 	UPROPERTY(EditAnywhere)
 	class UBoxComponent* CollisionBox;
-
-public:	
-
-
 };
