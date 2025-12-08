@@ -75,7 +75,7 @@ void AWeapon::OnSphereEndOverlap(UPrimitiveComponent* OverLappedComponent, AActo
 void AWeapon::OnRep_WeaponState() {
 	switch (WeaponState) {
 	case EWeaponState::EWS_Equipped:
-		ShowPickupWidget(false); // �ͻ�������
+		ShowPickupWidget(false);
 		break;
 	}
 }
