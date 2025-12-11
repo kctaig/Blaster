@@ -7,7 +7,8 @@
 #include "Weapon.generated.h"
 
 UENUM(BlueprintType)
-enum class EWeaponState : uint8 {
+enum class EWeaponState : uint8
+{
 	EWS_Initial UMETA(DisplayName = "Initial State"),
 	EWS_Equipped UMETA(DsiplayName = "Equipped"),
 	EWS_Dropped UMETA(DisplayName = "Dropped"),
@@ -16,7 +17,8 @@ enum class EWeaponState : uint8 {
 };
 
 UCLASS()
-class BLASTER_API AWeapon : public AActor {
+class BLASTER_API AWeapon : public AActor
+{
 	GENERATED_BODY()
 
 public:
@@ -26,22 +28,22 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	void ShowPickupWidget(bool bShowWidget);
 	virtual void Fire(const FVector& HitTarget);
-	
+
 	/**
 	 * Textures for the weapon crosshairs
 	 */
 	UPROPERTY(EditAnywhere, Category= Crosshairs)
 	class UTexture2D* CrosshairsCenter;
-	
+
 	UPROPERTY(EditAnywhere, Category= Crosshairs)
 	UTexture2D* CrosshairsLeft;
-	
+
 	UPROPERTY(EditAnywhere, Category= Crosshairs)
 	UTexture2D* CrosshairsRight;
-	
+
 	UPROPERTY(EditAnywhere, Category= Crosshairs)
 	UTexture2D* CrosshairsTop;
-	
+
 	UPROPERTY(EditAnywhere, Category= Crosshairs)
 	UTexture2D* CrosshairsBotton;
 
@@ -72,7 +74,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
 	class USphereComponent* AreaSphere;
-	
+
 	UPROPERTY(ReplicatedUsing = OnRep_WeaponState, VisibleAnywhere, Category = "Weapon Properties")
 	EWeaponState WeaponState;
 

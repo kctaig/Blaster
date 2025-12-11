@@ -7,7 +7,8 @@
 #include "Projectile.generated.h"
 
 UCLASS()
-class BLASTER_API AProjectile : public AActor {
+class BLASTER_API AProjectile : public AActor
+{
 	GENERATED_BODY()
 
 public:
@@ -20,7 +21,7 @@ protected:
 
 	UFUNCTION()
 	virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector
-		 NormalImpulse, const FHitResult& Hit);
+	                   NormalImpulse, const FHitResult& Hit);
 
 private:
 	UPROPERTY(EditAnywhere)

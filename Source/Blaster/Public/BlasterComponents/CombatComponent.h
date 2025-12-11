@@ -10,7 +10,8 @@
 #define TRACE_LENGTH 80000.f
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class BLASTER_API UCombatComponent : public UActorComponent {
+class BLASTER_API UCombatComponent : public UActorComponent
+{
 	GENERATED_BODY()
 
 public:
@@ -41,7 +42,7 @@ protected:
 	void MultiCastFire(const FVector_NetQuantize& TraceHitTarget);
 
 	void TraceUnderCrosshairs(FHitResult& TraceHitResult);
-	
+
 	void SetHUDCrosshairs(float DeltaTime);
 
 private:
@@ -62,10 +63,10 @@ private:
 	float AimWalkSpeed;
 
 	bool bFireButtonPressed;
-	
+
 	/**
 	 * HUD and crosshair
-	 */ 
-	float CrosshairVelocityFactor;	
+	 */
+	float CrosshairVelocityFactor;
 	float CrosshairInAirFactor;
 };

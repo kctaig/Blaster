@@ -10,6 +10,7 @@ USTRUCT(BlueprintType)
 struct FHUDPackage
 {
 	GENERATED_BODY()
+
 public:
 	class UTexture2D* CrosshairsCenter;
 	UTexture2D* CrosshairsLeft;
@@ -26,17 +27,18 @@ UCLASS()
 class BLASTER_API ABlasterHUD : public AHUD
 {
 	GENERATED_BODY()
+
 public:
 	virtual void DrawHUD() override;
-	
+
 private:
 	FHUDPackage HUDPackage;
-	
+
 	void DrawCrosshair(UTexture2D* Texture, const FVector2D ViewportCenter, FVector2D Spread);
 
 	UPROPERTY(EditAnywhere)
 	float CrosshairSpreadMax = 16.f;
-	
+
 public:
-	FORCEINLINE void SetHUDPackage(const FHUDPackage& Package){ HUDPackage = Package;}
+	FORCEINLINE void SetHUDPackage(const FHUDPackage& Package) { HUDPackage = Package; }
 };

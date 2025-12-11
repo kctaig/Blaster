@@ -14,7 +14,8 @@
 #include "Character/BlasterAnimInstance.h"
 
 // Sets default values
-ABlasterCharacter::ABlasterCharacter() {
+ABlasterCharacter::ABlasterCharacter()
+{
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -46,22 +47,26 @@ ABlasterCharacter::ABlasterCharacter() {
 	MinNetUpdateFrequency = 33.f;
 }
 
-void ABlasterCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
+void ABlasterCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME_CONDITION(ABlasterCharacter, OverlappingWeapon, COND_OwnerOnly);
 }
 
-void ABlasterCharacter::BeginPlay() {
+void ABlasterCharacter::BeginPlay()
+{
 	Super::BeginPlay();
 }
 
-void ABlasterCharacter::Tick(float DeltaTime) {
+void ABlasterCharacter::Tick(float DeltaTime)
+{
 	Super::Tick(DeltaTime);
 	AimOffset(DeltaTime);
 }
 
-void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
+void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ABlasterCharacter::Jump);
@@ -79,20 +84,25 @@ void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ABlasterCharacter::FireButtonReleased);
 }
 
-void ABlasterCharacter::PostInitializeComponents() {
+void ABlasterCharacter::PostInitializeComponents()
+{
 	Super::PostInitializeComponents();
-	if (Combat) {
+	if (Combat)
+	{
 		Combat->Character = this;
 	}
 }
 
-void ABlasterCharacter::PlayFireMontage(bool bAiming) {
-	if (Combat == nullptr || Combat->EquippedWeapon == nullptr) {
+void ABlasterCharacter::PlayFireMontage(bool bAiming)
+{
+	if (Combat == nullptr || Combat->EquippedWeapon == nullptr)
+	{
 		return;
 	}
 
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance && FireWeaponMontage) {
+	if (AnimInstance && FireWeaponMontage)
+	{
 		AnimInstance->Montage_Play(FireWeaponMontage);
 		FName SectionName;
 		SectionName = bAiming ? FName("RifleAim") : FName("RifleHip");
@@ -100,70 +110,91 @@ void ABlasterCharacter::PlayFireMontage(bool bAiming) {
 	}
 }
 
-void ABlasterCharacter::MoveForward(float Value) {
-	if (Controller != nullptr && Value != 0.f) {
+void ABlasterCharacter::MoveForward(float Value)
+{
+	if (Controller != nullptr && Value != 0.f)
+	{
 		const FRotator YawRotation(0.f, Controller->GetControlRotation().Yaw, 0.f);
 		const FVector Direction(FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X));
 		AddMovementInput(Direction, Value);
 	}
 }
 
-void ABlasterCharacter::MoveRight(float Value) {
-	if (Controller != nullptr && Value != 0.f) {
+void ABlasterCharacter::MoveRight(float Value)
+{
+	if (Controller != nullptr && Value != 0.f)
+	{
 		const FRotator YawRotation(0.f, Controller->GetControlRotation().Yaw, 0.f);
 		const FVector Direction(FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y));
 		AddMovementInput(Direction, Value);
 	}
 }
 
-void ABlasterCharacter::Turn(float Value) {
+void ABlasterCharacter::Turn(float Value)
+{
 	AddControllerYawInput(Value);
 }
 
-void ABlasterCharacter::LookUp(float Value) {
+void ABlasterCharacter::LookUp(float Value)
+{
 	AddControllerPitchInput(Value);
 }
 
-void ABlasterCharacter::EquipButtonPressed() {
-	if (Combat) {
-		if (HasAuthority()) {
+void ABlasterCharacter::EquipButtonPressed()
+{
+	if (Combat)
+	{
+		if (HasAuthority())
+		{
 			Combat->EquipWeapon(OverlappingWeapon);
 		}
-		else {
+		else
+		{
 			ServerEquipButtonPressed();
 		}
 	}
 }
 
-void ABlasterCharacter::ServerEquipButtonPressed_Implementation() {
-	if (Combat) {
+void ABlasterCharacter::ServerEquipButtonPressed_Implementation()
+{
+	if (Combat)
+	{
 		Combat->EquipWeapon(OverlappingWeapon);
 	}
 }
 
-void ABlasterCharacter::CrouchButtonPressed() {
-	if (bIsCrouched) {
+void ABlasterCharacter::CrouchButtonPressed()
+{
+	if (bIsCrouched)
+	{
 		UnCrouch();
 	}
-	else {
+	else
+	{
 		Crouch();
 	}
 }
 
-void ABlasterCharacter::AimButtonPressed() {
-	if (Combat) {
+void ABlasterCharacter::AimButtonPressed()
+{
+	if (Combat)
+	{
 		Combat->SetAiming(true);
 	}
 }
 
-void ABlasterCharacter::AimButtonReleased() {
-	if (Combat) {
+void ABlasterCharacter::AimButtonReleased()
+{
+	if (Combat)
+	{
 		Combat->SetAiming(false);
 	}
 }
 
-void ABlasterCharacter::AimOffset(float DeltaTime) {
-	if (Combat && Combat->EquippedWeapon == nullptr) {
+void ABlasterCharacter::AimOffset(float DeltaTime)
+{
+	if (Combat && Combat->EquippedWeapon == nullptr)
+	{
 		return;
 	}
 	FVector Velocity = GetVelocity();
@@ -173,18 +204,21 @@ void ABlasterCharacter::AimOffset(float DeltaTime) {
 	bool bIsInAir = GetCharacterMovement()->IsFalling();
 
 	// standing still, not jumping
-	if (Speed == 0.f && !bIsInAir) {
+	if (Speed == 0.f && !bIsInAir)
+	{
 		FRotator CurrentAimRotation = FRotator(0.f, GetBaseAimRotation().Yaw, 0.f);
 		FRotator DeltaAimRotation = UKismetMathLibrary::NormalizedDeltaRotator(CurrentAimRotation, StartingAimRotation);
 		AO_Yaw = DeltaAimRotation.Yaw;
-		if (TurningInPlace == ETurningInPlace::ETIP_NotTurning) {
+		if (TurningInPlace == ETurningInPlace::ETIP_NotTurning)
+		{
 			InterpAO_Yaw = AO_Yaw;
 		}
 		bUseControllerRotationYaw = true;
 		TurnInPlace(DeltaTime);
 	}
 	// runining or jumping
-	if (Speed > 0.f || bIsInAir) {
+	if (Speed > 0.f || bIsInAir)
+	{
 		StartingAimRotation = FRotator(0.f, GetBaseAimRotation().Yaw, 0.f);
 		AO_Yaw = 0.f;
 		bUseControllerRotationYaw = true;
@@ -192,7 +226,8 @@ void ABlasterCharacter::AimOffset(float DeltaTime) {
 	}
 
 	AO_Pitch = GetBaseAimRotation().Pitch;
-	if (AO_Pitch > 90.f && !IsLocallyControlled()) {
+	if (AO_Pitch > 90.f && !IsLocallyControlled())
+	{
 		// map pitch from [270,360] to [-90,0]
 		FVector2D InRange(270.f, 360.f);
 		FVector2D OutRange(-90.f, 0.f);
@@ -200,75 +235,98 @@ void ABlasterCharacter::AimOffset(float DeltaTime) {
 	}
 }
 
-void ABlasterCharacter::Jump() {
-	if (bIsCrouched) {
+void ABlasterCharacter::Jump()
+{
+	if (bIsCrouched)
+	{
 		UnCrouch();
 	}
-	else {
+	else
+	{
 		Super::Jump();
 	}
 }
 
-void ABlasterCharacter::FireButtonPressed() {
-	if (Combat) {
+void ABlasterCharacter::FireButtonPressed()
+{
+	if (Combat)
+	{
 		Combat->FireButtonPressed(true);
 	}
 }
 
-void ABlasterCharacter::FireButtonReleased() {
-	if (Combat) {
+void ABlasterCharacter::FireButtonReleased()
+{
+	if (Combat)
+	{
 		Combat->FireButtonPressed(false);
 	}
 }
 
-void ABlasterCharacter::TurnInPlace(float DeltaTime) {
-	if (AO_Yaw > 90.f) {
+void ABlasterCharacter::TurnInPlace(float DeltaTime)
+{
+	if (AO_Yaw > 90.f)
+	{
 		TurningInPlace = ETurningInPlace::ETIP_Right;
 	}
-	else if (AO_Yaw < -90.f) {
+	else if (AO_Yaw < -90.f)
+	{
 		TurningInPlace = ETurningInPlace::ETIP_Left;
 	}
-	if (TurningInPlace != ETurningInPlace::ETIP_NotTurning) {
+	if (TurningInPlace != ETurningInPlace::ETIP_NotTurning)
+	{
 		InterpAO_Yaw = FMath::FInterpTo(InterpAO_Yaw, 0.f, DeltaTime, 4.0f);
 		AO_Yaw = InterpAO_Yaw;
-		if (FMath::Abs(AO_Yaw) < 15.f) {
+		if (FMath::Abs(AO_Yaw) < 15.f)
+		{
 			TurningInPlace = ETurningInPlace::ETIP_NotTurning;
 			StartingAimRotation = FRotator(0.f, GetBaseAimRotation().Yaw, 0.f);
 		}
 	}
 }
 
-void ABlasterCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon) {
-	if (OverlappingWeapon) {
+void ABlasterCharacter::OnRep_OverlappingWeapon(AWeapon* LastWeapon)
+{
+	if (OverlappingWeapon)
+	{
 		OverlappingWeapon->ShowPickupWidget(true);
 	}
-	if (LastWeapon) {
+	if (LastWeapon)
+	{
 		LastWeapon->ShowPickupWidget(false);
 	}
 }
 
-void ABlasterCharacter::SetOverlappingWeapon(AWeapon* Weapon) {
-	if (OverlappingWeapon) {
+void ABlasterCharacter::SetOverlappingWeapon(AWeapon* Weapon)
+{
+	if (OverlappingWeapon)
+	{
 		OverlappingWeapon->ShowPickupWidget(false);
 	}
 	OverlappingWeapon = Weapon;
-	if (IsLocallyControlled()) {
-		if (OverlappingWeapon) {
+	if (IsLocallyControlled())
+	{
+		if (OverlappingWeapon)
+		{
 			OverlappingWeapon->ShowPickupWidget(true);
 		}
 	}
 }
 
-bool ABlasterCharacter::IsWeaponEquipped() {
+bool ABlasterCharacter::IsWeaponEquipped()
+{
 	return (Combat && Combat->EquippedWeapon);
 }
 
-bool ABlasterCharacter::IsAiming() {
+bool ABlasterCharacter::IsAiming()
+{
 	return (Combat && Combat->bAiming);
 }
 
-AWeapon* ABlasterCharacter::GetEquippedWeapon() {
-	if (Combat == nullptr) {
+AWeapon* ABlasterCharacter::GetEquippedWeapon()
+{
+	if (Combat == nullptr)
+	{
 		return nullptr;
 	}
 	return Combat->EquippedWeapon;

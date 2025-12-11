@@ -11,7 +11,8 @@
  * 
  */
 UCLASS()
-class BLASTER_API UBlasterAnimInstance : public UAnimInstance {
+class BLASTER_API UBlasterAnimInstance : public UAnimInstance
+{
 	GENERATED_BODY()
 
 public:

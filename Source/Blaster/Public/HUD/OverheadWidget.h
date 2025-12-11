@@ -10,7 +10,8 @@
  * 
  */
 UCLASS()
-class BLASTER_API UOverheadWidget : public UUserWidget {
+class BLASTER_API UOverheadWidget : public UUserWidget
+{
 	GENERATED_BODY()
 
 public:

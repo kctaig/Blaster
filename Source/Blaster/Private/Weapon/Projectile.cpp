@@ -8,7 +8,8 @@
 #include "Particles/ParticleSystem.h"
 #include "Sound/SoundCue.h"
 
-AProjectile::AProjectile() {
+AProjectile::AProjectile()
+{
 	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
 
@@ -24,10 +25,12 @@ AProjectile::AProjectile() {
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
 }
 
-void AProjectile::BeginPlay() {
+void AProjectile::BeginPlay()
+{
 	Super::BeginPlay();
 
-	if (Tracer) {
+	if (Tracer)
+	{
 		TracerComponent = UGameplayStatics::SpawnEmitterAttached(
 			Tracer,
 			CollisionBox,
@@ -37,27 +40,33 @@ void AProjectile::BeginPlay() {
 			EAttachLocation::KeepWorldPosition);
 	}
 
-	if (HasAuthority()) {
+	if (HasAuthority())
+	{
 		CollisionBox->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 	}
 }
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-                        FVector NormalImpulse, const FHitResult& Hit) {
+                        FVector NormalImpulse, const FHitResult& Hit)
+{
 	Destroy();
 }
 
-void AProjectile::Tick(float DeltaTime) {
+void AProjectile::Tick(float DeltaTime)
+{
 	Super::Tick(DeltaTime);
 }
 
-void AProjectile::Destroyed() {
+void AProjectile::Destroyed()
+{
 	Super::Destroyed();
 
-	if (ImpactParticles) {
+	if (ImpactParticles)
+	{
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactParticles, GetActorTransform());
 	}
-	if (ImpactSound) {
+	if (ImpactSound)
+	{
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
 	}
 }

@@ -10,8 +10,8 @@ UCLASS()
 class BLASTER_API ACasing : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	ACasing();
 
 protected:
@@ -19,7 +19,7 @@ protected:
 
 	UFUNCTION()
 	virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector
-		 NormalImpulse, const FHitResult& Hit);
+	                   NormalImpulse, const FHitResult& Hit);
 
 private:
 	UPROPERTY(VisibleAnywhere)

@@ -5,7 +5,8 @@
 #include "kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
 
-ACasing::ACasing() {
+ACasing::ACasing()
+{
 	PrimaryActorTick.bCanEverTick = false;
 
 	CasingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CasingMesh"));
@@ -17,15 +18,19 @@ ACasing::ACasing() {
 	ShellEjectionImpulse = 5.f;
 }
 
-void ACasing::BeginPlay() {
+void ACasing::BeginPlay()
+{
 	Super::BeginPlay();
 
 	CasingMesh->OnComponentHit.AddDynamic(this, &ACasing::OnHit);
 	CasingMesh->AddImpulse(GetActorForwardVector() * ShellEjectionImpulse);
 }
 
-void ACasing::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) {
-	if (ShellSound) {
+void ACasing::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+                    FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (ShellSound)
+	{
 		UGameplayStatics::PlaySoundAtLocation(this, ShellSound, GetActorLocation());
 	}
 	Destroy();

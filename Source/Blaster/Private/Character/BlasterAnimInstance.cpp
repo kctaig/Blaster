@@ -7,19 +7,23 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Weapon/Weapon.h"
 
-void UBlasterAnimInstance::NativeInitializeAnimation() {
+void UBlasterAnimInstance::NativeInitializeAnimation()
+{
 	Super::NativeInitializeAnimation();
 
 	BlasterCharacter = Cast<ABlasterCharacter>(TryGetPawnOwner());
 }
 
-void UBlasterAnimInstance::NativeUpdateAnimation(float DeltaTime) {
+void UBlasterAnimInstance::NativeUpdateAnimation(float DeltaTime)
+{
 	Super::NativeUpdateAnimation(DeltaTime);
 
-	if (BlasterCharacter == nullptr) {
+	if (BlasterCharacter == nullptr)
+	{
 		BlasterCharacter = Cast<ABlasterCharacter>(TryGetPawnOwner());
 	}
-	if (BlasterCharacter == nullptr) {
+	if (BlasterCharacter == nullptr)
+	{
 		return;
 	}
 
@@ -52,7 +56,8 @@ void UBlasterAnimInstance::NativeUpdateAnimation(float DeltaTime) {
 	AO_Yaw = BlasterCharacter->GetAO_Yaw();
 	AO_Pitch = BlasterCharacter->GetAO_Pitch();
 
-	if (bWeaponEquiped && EquippedWeapon && EquippedWeapon->GetWeaponMesh() && BlasterCharacter->GetMesh()) {
+	if (bWeaponEquiped && EquippedWeapon && EquippedWeapon->GetWeaponMesh() && BlasterCharacter->GetMesh())
+	{
 		LeftHandTransform = EquippedWeapon->GetWeaponMesh()->GetSocketTransform(FName("LeftHandSocket"), RTS_World);
 		FVector OutPosition;
 		FRotator OutRotation;

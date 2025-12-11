@@ -8,7 +8,8 @@
 #include "BlasterCharacter.generated.h"
 
 UCLASS()
-class BLASTER_API ABlasterCharacter : public ACharacter {
+class BLASTER_API ABlasterCharacter : public ACharacter
+{
 	GENERATED_BODY()
 
 public:
