@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "HUD/BlasterHUD.h"
 #include "CombatComponent.generated.h"
 
 
@@ -71,22 +72,24 @@ private:
 	float CrosshairInAirFactor;
 	float CrosshairAimFactor;
 	float CrosshairShootingFactor;
-	
+
 	FVector HitTarget;
-	
+
+	FHUDPackage HUDPackage;
+
 	/**
 	 * Aiming and FOV
 	 */
 	// Field of view when not aiming, set to the camera's base FOV in BeginPlay
 	float DefaultFOV;
-	
+
 	UPROPERTY(EditAnyWhere, Category = Combat)
 	float ZoomedFOV = 30.f;
-	
+
 	float CurrentFOV;
 
 	UPROPERTY(EditAnyWhere, Category = Combat)
 	float ZoomInterpSpeed = 20.f;
-	
+
 	void InterpFOV(float DeltaTime);
 };
