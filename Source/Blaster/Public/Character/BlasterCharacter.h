@@ -21,10 +21,10 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void PostInitializeComponents() override;
 	void PlayFireMontage(bool bAiming);
-	
+
 	UFUNCTION(NetMulticast, Unreliable)
 	void MulticastHit();
-	
+
 	void OnRep_ReplicatedMovement() override;
 
 protected:
@@ -78,15 +78,15 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Combat)
 	class UAnimMontage* FireWeaponMontage;
-	
+
 	UPROPERTY(EditAnywhere, Category = Combat)
 	UAnimMontage* HitReactMontage;
-	
+
 	void HideCameraIfCharacterClose();
-	
+
 	UPROPERTY(EditAnywhere)
 	float CameraThreshold = 200.f;
-	
+
 	bool bRotateRootBone;
 	float TurnThreshold = 0.5f;
 	FRotator ProxyRotationLastFrame;
@@ -94,6 +94,19 @@ private:
 	float ProxyYaw;
 	float TimeSinceLastMovementReplication;
 	float CalculateSpeed();
+
+	/**
+	 * Player health
+	 */
+
+	UPROPERTY(EditAnywhere, Category = "Player Stats")
+	float MaxHealth = 100.f;
+
+	UPROPERTY(ReplicatedUsing = OnRep_Health, VisibleAnywhere, Category = "Player Stats")
+	float Health = 100.f;
+
+	UFUNCTION()
+	void OnRep_Health();
 
 public:
 	void SetOverlappingWeapon(AWeapon* Weapon);
