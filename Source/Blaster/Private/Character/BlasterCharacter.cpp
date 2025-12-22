@@ -19,6 +19,7 @@
 #include "GameMode/BlasterGameMode.h"
 #include "kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "PlayerState/BlasterPlayerState.h"
 #include "Sound/SoundCue.h"
 
 // Sets default values
@@ -137,7 +138,7 @@ void ABlasterCharacter::MulticastElim_Implementation()
 void ABlasterCharacter::Destroyed()
 {
 	Super::Destroyed();
-	
+
 	if (ElimBotComponent)
 	{
 		ElimBotComponent->DestroyComponent();
@@ -172,6 +173,7 @@ void ABlasterCharacter::Tick(float DeltaTime)
 		CalculateAO_Pitch();
 	}
 	HideCameraIfCharacterClose();
+	PollInit();
 }
 
 void ABlasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -266,6 +268,18 @@ void ABlasterCharacter::UpdateHUDHealth()
 	if (BlasterPlayerController)
 	{
 		BlasterPlayerController->SetHUDHealth(Health, MaxHealth);
+	}
+}
+
+void ABlasterCharacter::PollInit()
+{
+	if (BlasterPlayerState == nullptr)
+	{
+		BlasterPlayerState = GetPlayerState<ABlasterPlayerState>();
+		if (BlasterPlayerState)
+		{
+			BlasterPlayerState->AddToScore(0.f);
+		}
 	}
 }
 
