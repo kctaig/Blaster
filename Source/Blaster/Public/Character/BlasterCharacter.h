@@ -24,11 +24,12 @@ public:
 	void PlayFireMontage(bool bAiming);
 	void PlayElimMontage();
 	void OnRep_ReplicatedMovement() override;
-	
+
 	void Elim();
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastElim();
 	virtual void Destroyed() override;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -121,14 +122,14 @@ private:
 	class ABlasterPlayerController* BlasterPlayerController;
 
 	bool bElimmed = false;
-	
+
 	FTimerHandle ElimTimer;
 
 	UPROPERTY(EditDefaultsOnly)
 	float ElimDelay = 3.f;
-	
+
 	void ElimTimerFinished();
-	
+
 	/**
 	 * Dissolve effect
 	 */
@@ -136,7 +137,7 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UTimelineComponent* DissolveTimeline;
 	FOnTimelineFloat DissolveTrack;
-	
+
 	UFUNCTION()
 	void UpdateDissolveMaterial(float DissolveValue);
 	void StartDissolve();
@@ -158,13 +159,13 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	UParticleSystem* ElimBotEffect;
-	
+
 	UPROPERTY(VisibleAnywhere)
 	UParticleSystemComponent* ElimBotComponent;
 
 	UPROPERTY(EditAnywhere)
 	class USoundCue* ElimBotSound;
-	
+
 public:
 	void SetOverlappingWeapon(AWeapon* Weapon);
 	bool IsWeaponEquipped();
@@ -177,4 +178,6 @@ public:
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	FORCEINLINE bool ShouldRotateRootBone() const { return bRotateRootBone; }
 	FORCEINLINE bool IsElimmed() const { return bElimmed; }
+	FORCEINLINE float GetHealth() const { return Health; }
+	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
 };
