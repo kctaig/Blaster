@@ -141,7 +141,7 @@ void AWeapon::OnRep_Ammo()
 
 void AWeapon::SpendRound()
 {
-	--Ammo;
+	Ammo = FMath::Clamp(Ammo - 1, 0, MagCapacity);
 	SetHUDAmmo();
 }
 
@@ -167,6 +167,11 @@ void AWeapon::SetWeaponState(EWeaponState State)
 		WeaponMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		break;
 	}
+}
+
+bool AWeapon::ISEmpty()
+{
+	return Ammo <= 0;
 }
 
 void AWeapon::ShowPickupWidget(bool bShowWidget)

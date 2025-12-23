@@ -90,7 +90,7 @@ void UCombatComponent::OnRep_EquippedWeapon()
 
 void UCombatComponent::Fire()
 {
-	if (bCanFire && EquippedWeapon)
+	if (CanFire())
 	{
 		bCanFire = false;
 		ServerFire(HitTarget);
@@ -262,6 +262,12 @@ void UCombatComponent::FireTimerFinished()
 	{
 		Fire();
 	}
+}
+
+bool UCombatComponent::CanFire()
+{
+	if (EquippedWeapon == nullptr) return false;
+	return !EquippedWeapon->ISEmpty() || !bCanFire;
 }
 
 void UCombatComponent::ServerFire_Implementation(const FVector_NetQuantize& TraceHitTarget)
