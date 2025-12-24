@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "HUD/BlasterHUD.h"
 #include "Weapon/WeaponTypes.h"
+#include "BlasterTypes/CombatState.h"
 #include "CombatComponent.generated.h"
 
 
@@ -24,6 +25,10 @@ public:
 	friend class ABlasterCharacter;
 
 	void EquipWeapon(class AWeapon* WeaponToEquip);
+	void Reload();
+
+	UFUNCTION(BlueprintCallable)
+	void FinishReloading();
 
 protected:
 	virtual void BeginPlay() override;
@@ -34,7 +39,7 @@ protected:
 
 	UFUNCTION()
 	void OnRep_EquippedWeapon();
-	
+
 	void Fire();
 
 	void FireButtonPressed(bool bPressed);
@@ -48,6 +53,11 @@ protected:
 	void TraceUnderCrosshairs(FHitResult& TraceHitResult);
 
 	void SetHUDCrosshairs(float DeltaTime);
+
+	UFUNCTION(Server, Reliable)
+	void ServerReload();
+
+	void HandleReload();
 
 private:
 	UPROPERTY()
@@ -98,17 +108,17 @@ private:
 	float ZoomInterpSpeed = 20.f;
 
 	void InterpFOV(float DeltaTime);
-	
+
 	/**
 	 * Automatic fire
-	 */	
-	
+	 */
+
 	FTimerHandle FireTimer;
 	bool bCanFire = true;
-	
+
 	void StartFireTimer();
 	void FireTimerFinished();
-	
+
 	bool CanFire();
 
 	// Carried ammo for the currently-equipped weapon
@@ -117,11 +127,17 @@ private:
 
 	UFUNCTION()
 	void OnRep_CarriedAmmo();
-	
+
 	TMap<EWeaponType, int32> CarriedAmmoMap;
 
 	UPROPERTY(EditAnyWhere)
 	int32 StartingARAmmo = 30;
-	
+
 	void InitializeCarriedAmmo();
+
+	UPROPERTY(ReplicatedUsing = OnRep_CombatState)
+	ECombatState CombatState = ECombatState::ECS_Unoccupied;
+
+	UFUNCTION()
+	void OnRep_CombatState();
 };
