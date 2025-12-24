@@ -90,14 +90,14 @@ void UCombatComponent::OnRep_EquippedWeapon()
 		}
 		Character->GetCharacterMovement()->bOrientRotationToMovement = false;
 		Character->bUseControllerRotationYaw = true;
-		
+
 		if (EquippedWeapon->EquipSound)
 		{
 			UGameplayStatics::PlaySoundAtLocation(
 				this,
 				EquippedWeapon->EquipSound,
 				Character->GetActorLocation()
-				);
+			);
 		}
 	}
 }
@@ -276,6 +276,10 @@ void UCombatComponent::FireTimerFinished()
 	{
 		Fire();
 	}
+	if (EquippedWeapon->ISEmpty())
+	{
+		Reload();
+	}
 }
 
 bool UCombatComponent::CanFire()
@@ -349,14 +353,19 @@ void UCombatComponent::EquipWeapon(AWeapon* WeaponToEquip)
 	{
 		Controller->SetHUDCarriedAmmo(CarriedAmmo);
 	}
-	
+
 	if (EquippedWeapon->EquipSound)
 	{
 		UGameplayStatics::PlaySoundAtLocation(
 			this,
 			EquippedWeapon->EquipSound,
 			Character->GetActorLocation()
-			);
+		);
+	}
+
+	if (EquippedWeapon->ISEmpty())
+	{
+		Reload();
 	}
 	
 	Character->GetCharacterMovement()->bOrientRotationToMovement = false;
