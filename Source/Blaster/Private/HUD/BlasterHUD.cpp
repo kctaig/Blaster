@@ -47,13 +47,11 @@ void ABlasterHUD::DrawHUD()
 void ABlasterHUD::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	AddCharacterOverlay();
 }
 
 void ABlasterHUD::AddCharacterOverlay()
 {
-	APlayerController* PlayerController =  GetOwningPlayerController();
+	APlayerController* PlayerController = GetOwningPlayerController();
 	if (PlayerController && CharacterOverlayClass)
 	{
 		CharacterOverlay = CreateWidget<UCharacterOverlay>(PlayerController, CharacterOverlayClass);

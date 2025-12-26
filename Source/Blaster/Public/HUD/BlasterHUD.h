@@ -34,16 +34,19 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Player Stats")
 	TSubclassOf<class UUserWidget> CharacterOverlayClass;
-	
+	void AddCharacterOverlay();
+
+	UPROPERTY()
 	class UCharacterOverlay* CharacterOverlay;
-	
+
 protected:
 	virtual void BeginPlay() override;
-	void AddCharacterOverlay();
+
 private:
 	FHUDPackage HUDPackage;
 
-	void DrawCrosshair(UTexture2D* Texture, const FVector2D ViewportCenter, FVector2D Spread, FLinearColor CrosshairColor);
+	void DrawCrosshair(UTexture2D* Texture, const FVector2D ViewportCenter, FVector2D Spread,
+	                   FLinearColor CrosshairColor);
 
 	UPROPERTY(EditAnywhere)
 	float CrosshairSpreadMax = 16.f;
