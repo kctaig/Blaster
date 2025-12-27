@@ -25,12 +25,14 @@ public:
 	void PlayFireMontage(bool bAiming);
 	void PlayReloadMontage();
 	void PlayElimMontage();
-	void OnRep_ReplicatedMovement() override;
-
+	virtual void OnRep_ReplicatedMovement() override;
 	void Elim();
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastElim();
 	virtual void Destroyed() override;
+
+	UPROPERTY(Replicated)
+	bool bDisableGameplay = false;
 
 protected:
 	virtual void BeginPlay() override;
@@ -58,6 +60,7 @@ protected:
 	void UpdateHUDHealth();
 	// Poll for any relevant classes and initial
 	void PollInit();
+	void RotateInPlace(float DeltaTime);
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = Camera)
@@ -92,13 +95,13 @@ private:
 	/**
 	 * Animation montages
 	 */
-	
+
 	UPROPERTY(EditAnywhere, Category = Combat)
 	class UAnimMontage* FireWeaponMontage;
 
 	UPROPERTY(EditAnywhere, Category = Combat)
 	UAnimMontage* ReloadMontage;
-	
+
 	UPROPERTY(EditAnywhere, Category = Combat)
 	UAnimMontage* HitReactMontage;
 
@@ -130,7 +133,7 @@ private:
 
 	UFUNCTION()
 	void OnRep_Health();
-	
+
 	UPROPERTY()
 	class ABlasterPlayerController* BlasterPlayerController;
 
@@ -178,7 +181,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	class USoundCue* ElimBotSound;
-	
+
 	UPROPERTY()
 	class ABlasterPlayerState* BlasterPlayerState;
 
@@ -197,4 +200,6 @@ public:
 	FORCEINLINE float GetHealth() const { return Health; }
 	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
 	ECombatState GetCombatState() const;
+	FORCEINLINE UCombatComponent* GetCombat() const { return Combat; }
+	FORCEINLINE bool GetDisableGameplay() const { return bDisableGameplay; }
 };
