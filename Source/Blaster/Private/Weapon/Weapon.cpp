@@ -19,6 +19,7 @@ AWeapon::AWeapon()
 	PrimaryActorTick.bCanEverTick = false;
 	// if true, this actor wiil bt replicate to remote machine
 	bReplicates = true;
+	SetReplicateMovement(true);
 
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
 	WeaponMesh->SetupAttachment(RootComponent);
