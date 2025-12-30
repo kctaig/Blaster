@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
 #include "particles/ParticleSystemComponent.h"
+#include "Sound/SoundCue.h"
 
 void AHitScanWeapon::Fire(const FVector& HitTarget)
 {
@@ -24,7 +25,8 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 		FVector Start = SocketTransform.GetLocation();
 		FVector End = Start + (HitTarget - Start) * 1.25f;
 		FHitResult FireHit;
-		if (UWorld* World = GetWorld())
+		UWorld* World = GetWorld();
+		if (World)
 		{
 			World->LineTraceSingleByChannel(
 				FireHit,
@@ -57,6 +59,14 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 						FireHit.ImpactNormal.Rotation()
 					);
 				}
+				if (HitSound)
+				{
+					UGameplayStatics::PlaySoundAtLocation(
+						this,
+						HitSound,
+						FireHit.ImpactPoint
+					);
+				}
 			}
 			if (BeamParticles)
 			{
@@ -70,6 +80,22 @@ void AHitScanWeapon::Fire(const FVector& HitTarget)
 					Beam->SetVectorParameter(FName("Target"), BeamEnd);
 				}
 			}
+		}
+		if (MuzzleFlash)
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(
+				World,
+				MuzzleFlash,
+				SocketTransform
+			);
+		}
+		if (FireSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(
+				this,
+				FireSound,
+				GetActorLocation()
+			);
 		}
 	}
 }
