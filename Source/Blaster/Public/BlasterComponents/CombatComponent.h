@@ -29,6 +29,11 @@ public:
 
 	void FireButtonPressed(bool bPressed);
 
+	UFUNCTION(BlueprintCallable)
+	void ShotgunShellReload();
+
+	void JumToShotgunEnd();
+
 protected:
 	virtual void BeginPlay() override;
 	void SetAiming(bool bIsAiming);
@@ -134,22 +139,22 @@ private:
 	 */
 	UPROPERTY(EditAnyWhere)
 	int32 StartingARAmmo = 30;
-	
+
 	UPROPERTY(EditAnyWhere)
 	int32 StartingRocketAmmo = 0;
-	
+
 	UPROPERTY(EditAnyWhere)
 	int32 StartingPistolAmmo = 0;
-	
+
 	UPROPERTY(EditAnyWhere)
 	int32 StartingSMGAmmo = 0;
-	
+
 	UPROPERTY(EditAnyWhere)
 	int32 StartingShotgunAmmo = 0;
-	
+
 	UPROPERTY(EditAnyWhere)
 	int32 StartingSniperAmmo = 0;
-	
+
 	UPROPERTY(EditAnyWhere)
 	int32 StartingGrenadeLauncherAmmo = 0;
 
@@ -162,4 +167,6 @@ private:
 	void OnRep_CombatState();
 
 	void UpdateAmmoValues();
+
+	void UpdateShotgunAmmoValues();
 };

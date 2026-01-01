@@ -7,6 +7,7 @@
 #include "Character/BlasterCharacter.h"
 #include "Net/UnrealNetwork.h"
 #include "Animation/AnimationAsset.h"
+#include "BlasterComponents/CombatComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Weapon/Casing.h"
 #include "Engine/SkeletalMeshSocket.h"
@@ -146,6 +147,13 @@ void AWeapon::OnRep_WeaponState()
 
 void AWeapon::OnRep_Ammo()
 {
+	BlasterOwnerCharacter = BlasterOwnerCharacter == nullptr
+		                        ? Cast<ABlasterCharacter>(GetOwner())
+		                        : BlasterOwnerCharacter;
+	if (BlasterOwnerCharacter && BlasterOwnerCharacter->GetCombat() && IsFull())
+	{
+		BlasterOwnerCharacter->GetCombat()->JumToShotgunEnd();
+	}
 	SetHUDAmmo();
 }
 
@@ -188,9 +196,14 @@ void AWeapon::SetWeaponState(EWeaponState State)
 	}
 }
 
-bool AWeapon::ISEmpty()
+bool AWeapon::IsEmpty()
 {
 	return Ammo <= 0;
+}
+
+bool AWeapon::IsFull()
+{
+	return Ammo == MagCapacity;
 }
 
 void AWeapon::ShowPickupWidget(bool bShowWidget)
