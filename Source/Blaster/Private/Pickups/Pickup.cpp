@@ -6,6 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
+#include "Weapon/WeaponTypes.h"
 
 APickup::APickup()
 {
@@ -14,16 +15,20 @@ APickup::APickup()
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 
-	OverlaySphere = CreateDefaultSubobject<USphereComponent>(TEXT("OverlaySphere"));
-	OverlaySphere->SetupAttachment(RootComponent);
-	OverlaySphere->SetSphereRadius(150);
-	OverlaySphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	OverlaySphere->SetCollisionResponseToAllChannels(ECR_Ignore);
-	OverlaySphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+	OverlapSphere = CreateDefaultSubobject<USphereComponent>(TEXT("OverlaySphere"));
+	OverlapSphere->SetupAttachment(RootComponent);
+	OverlapSphere->SetSphereRadius(150);
+	OverlapSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	OverlapSphere->SetCollisionResponseToAllChannels(ECR_Ignore);
+	OverlapSphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+	OverlapSphere->AddLocalOffset(FVector(0.0f, 0.0f, 85.0f));
 
 	PickupMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PickupMesh"));
-	PickupMesh->SetupAttachment(OverlaySphere);
+	PickupMesh->SetupAttachment(OverlapSphere);
 	PickupMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	PickupMesh->SetRelativeScale3D(FVector(5.f, 5.f, 5.f));
+	PickupMesh->SetRenderCustomDepth(true);
+	PickupMesh->SetCustomDepthStencilValue(CUSTOM_DEPTH_PURPLE);
 }
 
 void APickup::BeginPlay()
@@ -32,7 +37,7 @@ void APickup::BeginPlay()
 
 	if (HasAuthority())
 	{
-		OverlaySphere->OnComponentBeginOverlap.AddDynamic(this, &APickup::OnSphereOverlap);
+		OverlapSphere->OnComponentBeginOverlap.AddDynamic(this, &APickup::OnSphereOverlap);
 	}
 }
 
@@ -45,6 +50,11 @@ void APickup::OnSphereOverlap(UPrimitiveComponent* OverLappedComponent, AActor* 
 void APickup::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (PickupMesh)
+	{
+		PickupMesh->AddWorldRotation(FRotator(0.f, BaseTurnRate * DeltaTime, 0.f));
+	}
 }
 
 void APickup::Destroyed()
