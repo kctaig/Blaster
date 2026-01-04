@@ -53,7 +53,7 @@ void UBuffComponent::BuffSpeed(float BuffBaseSpeed, float BuffCrouchSpeed, float
 		Character->GetCharacterMovement()->MaxWalkSpeed = BuffBaseSpeed;
 		Character->GetCharacterMovement()->MaxWalkSpeedCrouched = BuffCrouchSpeed;
 	}
-	MulticastSpeedBuff(BuffBaseSpeed,BuffCrouchSpeed);
+	MulticastSpeedBuff(BuffBaseSpeed, BuffCrouchSpeed);
 }
 
 void UBuffComponent::SetInitialSpeeds(float BaseSpeed, float CrouchSpeed)
@@ -68,13 +68,55 @@ void UBuffComponent::ResetSpeeds()
 
 	Character->GetCharacterMovement()->MaxWalkSpeed = InitialBaseSpeed;
 	Character->GetCharacterMovement()->MaxWalkSpeedCrouched = InitialCrouchSpeed;
-	MulticastSpeedBuff(InitialBaseSpeed,InitialCrouchSpeed);
+	MulticastSpeedBuff(InitialBaseSpeed, InitialCrouchSpeed);
 }
 
 void UBuffComponent::MulticastSpeedBuff_Implementation(float BaseSpeed, float CrouchSpeed)
 {
-	Character->GetCharacterMovement()->MaxWalkSpeed = BaseSpeed;
-	Character->GetCharacterMovement()->MaxWalkSpeedCrouched = CrouchSpeed;
+	if (Character && Character->GetCharacterMovement())
+	{
+		Character->GetCharacterMovement()->MaxWalkSpeed = BaseSpeed;
+		Character->GetCharacterMovement()->MaxWalkSpeedCrouched = CrouchSpeed;
+	}
+}
+
+void UBuffComponent::BuffJump(float BuffJumpVelocity, float BuffTime)
+{
+	if (Character == nullptr) return;
+
+	Character->GetWorldTimerManager().SetTimer(
+		JumpBuffTimer,
+		this,
+		&UBuffComponent::ResetJump,
+		BuffTime
+	);
+
+	if (Character->GetCharacterMovement())
+	{
+		Character->GetCharacterMovement()->JumpZVelocity = BuffJumpVelocity;
+	}
+	MulticastJumpBuff(BuffJumpVelocity);
+}
+
+void UBuffComponent::SetInitialJumpVelocity(float Velocity)
+{
+	InitialJumpVelocity = Velocity;
+}
+
+void UBuffComponent::ResetJump()
+{
+	if (Character == nullptr || Character->GetCharacterMovement() == nullptr) return;
+
+	Character->GetCharacterMovement()->JumpZVelocity = InitialJumpVelocity;
+	MulticastJumpBuff(InitialBaseSpeed);
+}
+
+void UBuffComponent::MulticastJumpBuff_Implementation(float JumpZVelocity)
+{
+	if (Character && Character->GetCharacterMovement())
+	{
+		Character->GetCharacterMovement()->JumpZVelocity = JumpZVelocity;
+	}
 }
 
 void UBuffComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)

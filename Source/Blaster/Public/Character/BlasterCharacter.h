@@ -13,7 +13,7 @@
 UCLASS()
 class BLASTER_API ABlasterCharacter : public ACharacter, public IInteractWithCrosshairsInterface
 {
-	GENERATED_BODY()
+	GENERATED_BODY() 
 
 public:
 	ABlasterCharacter();
