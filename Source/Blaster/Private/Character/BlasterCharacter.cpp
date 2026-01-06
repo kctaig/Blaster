@@ -92,6 +92,10 @@ void ABlasterCharacter::Elim()
 	{
 		Combat->EquippedWeapon->Dropped();
 	}
+	if (Combat && Combat->SecondaryWeapon)
+	{
+		Combat->SecondaryWeapon->Dropped();
+	}
 	MulticastElim();
 	GetWorldTimerManager().SetTimer(
 		ElimTimer,
