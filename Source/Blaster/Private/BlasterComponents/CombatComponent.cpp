@@ -73,6 +73,7 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	}
 }
 
+// 该函数由客户端执行，通过调用ServerSetAiming服务器执行相关操作
 void UCombatComponent::SetAiming(bool bIsAiming)
 {
 	if (Character == nullptr || EquippedWeapon == nullptr) return;
@@ -85,6 +86,11 @@ void UCombatComponent::SetAiming(bool bIsAiming)
 	if (Character->IsLocallyControlled() && EquippedWeapon->GetWeaponType() == EWeaponType::EWT_SniperRifle)
 	{
 		Character->ShowSniperScopeWidget(bIsAiming);
+	}
+	if (Character->IsLocallyControlled())
+	{
+		// 设置本地按键状态
+		bAimButtonPressed = bIsAiming;
 	}
 }
 
@@ -447,6 +453,7 @@ void UCombatComponent::FireTimerFinished()
 bool UCombatComponent::CanFire()
 {
 	if (EquippedWeapon == nullptr) return false;
+	if (bLocallyReloading) return false;
 	if (!EquippedWeapon->IsEmpty() &&
 		bCanFire &&
 		CombatState == ECombatState::ECS_Reloading &&
@@ -559,11 +566,26 @@ void UCombatComponent::EquipSecondaryWeapon(AWeapon* WeaponToEquip)
 	SecondaryWeapon->SetOwner(Character);
 }
 
+void UCombatComponent::OnRep_Aiming()
+{
+	// setAiming中 bAiming = bAimButonPressed, 高延迟下，服务器的信息同步过来时，bAiming不会改变
+	if (Character && Character->IsLocallyControlled())
+	{
+		bAiming = bAimButtonPressed;
+	}
+}
+
 void UCombatComponent::Reload()
 {
-	if (CarriedAmmo > 0 && CombatState == ECombatState::ECS_Unoccupied && EquippedWeapon && !EquippedWeapon->IsFull())
+	if (CarriedAmmo > 0 &&
+		CombatState == ECombatState::ECS_Unoccupied &&
+		EquippedWeapon &&
+		!EquippedWeapon->IsFull() &&
+		!bLocallyReloading)
 	{
 		ServerReload();
+		HandleReload();
+		bLocallyReloading = true;
 	}
 }
 
@@ -571,12 +593,16 @@ void UCombatComponent::ServerReload_Implementation()
 {
 	if (Character == nullptr) return;
 	CombatState = ECombatState::ECS_Reloading;
-	HandleReload();
+	if (!Character->IsLocallyControlled())
+	{
+		HandleReload();
+	}
 }
 
 void UCombatComponent::FinishReloading()
 {
 	if (Character == nullptr) return;
+	bLocallyReloading = false;
 	if (Character->HasAuthority())
 	{
 		CombatState = ECombatState::ECS_Unoccupied;
@@ -651,7 +677,10 @@ void UCombatComponent::OnRep_CombatState()
 	switch (CombatState)
 	{
 	case ECombatState::ECS_Reloading:
-		HandleReload();
+		if (Character && !Character->IsLocallyControlled())
+		{
+			HandleReload();
+		}
 		break;
 	case ECombatState::ECS_Unoccupied:
 		if (bFireButtonPressed)
