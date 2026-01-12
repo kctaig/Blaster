@@ -40,7 +40,7 @@ public:
 
 	void UpdateHUDHealth();
 	void UpdateHUDShield();
-	
+
 	UPROPERTY()
 	TMap<FName, class UBoxComponent*> HitCollisionBoxes;
 
@@ -153,7 +153,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	class UBuffComponent* Buff;
-	
+
 	UPROPERTY(VisibleAnywhere)
 	class ULagCompensationComponent* LagCompensation;
 
@@ -305,6 +305,7 @@ public:
 	ECombatState GetCombatState() const;
 	FORCEINLINE UCombatComponent* GetCombat() const { return Combat; }
 	FORCEINLINE UBuffComponent* GetBuff() const { return Buff; }
+	FORCEINLINE ULagCompensationComponent* GetLagCompensation() const { return LagCompensation; }
 	FORCEINLINE bool GetDisableGameplay() const { return bDisableGameplay; }
 	FORCEINLINE UAnimMontage* GetReloadMontage() const { return ReloadMontage; }
 	FORCEINLINE UStaticMeshComponent* GetAttachedGrenade() const { return AttachedGrenade; }

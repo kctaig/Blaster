@@ -13,7 +13,7 @@ struct FBoxInformation
 
 	UPROPERTY();
 	FVector Location;
-	
+
 	UPROPERTY();
 	FRotator Rotation;
 
@@ -43,18 +43,24 @@ public:
 	friend class ABlasterCharacter;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
-	void ShowFramePackage(const FFramePackage& Package,const FColor& Color);
+	void ShowFramePackage(const FFramePackage& Package, const FColor& Color);
+	void ServerSideRewind(ABlasterCharacter* HitCharacter,
+	                      const FVector_NetQuantize& TraceStart,
+	                      const FVector_NetQuantize& TraceEnd,
+	                      float HitTime);
 
 protected:
 	virtual void BeginPlay() override;
 	void SaveFramePackage(FFramePackage& Package);
+	FFramePackage InterpBetweenFrames(const FFramePackage& OlderFrame, const FFramePackage& YoungerFrame, float HitTime);
+
 private:
 	UPROPERTY()
 	ABlasterCharacter* Character;
-	
+
 	UPROPERTY()
 	class ABlasterPlayerController* Controller;
-	
+
 	TDoubleLinkedList<FFramePackage> FrameHistory;
 
 	UPROPERTY(EditAnywhere)
