@@ -33,6 +33,8 @@ public:
 	void HandleMatchHasStarted();
 	void HandleCooldown();
 
+	float SingleTripTime = 0.f;
+
 protected:
 	virtual void BeginPlay() override;
 	void SetHUDTime();
@@ -106,12 +108,12 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float HighPingDuration = 5.f;
-	
-	float PingAnimationRunningTime =0.f;
+
+	float PingAnimationRunningTime = 0.f;
 
 	UPROPERTY(EditAnywhere)
 	float CheckPingFrequency = 20.f;
-	
+
 	UPROPERTY(EditAnywhere)
-	float HighPingThreshold = 50.f; 
+	float HighPingThreshold = 50.f;
 };
