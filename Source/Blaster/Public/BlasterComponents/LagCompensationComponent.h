@@ -75,11 +75,25 @@ public:
 
 	void ShowFramePackage(const FFramePackage& Package, const FColor& Color);
 
+	/**
+	 * Shotgun
+	 */
 	FShotgunServerSideRewindResult ShotgunServerSideRewind(const TArray<ABlasterCharacter*>& HitCharacters,
 	                                                       const FVector_NetQuantize& TraceStart,
 	                                                       const TArray<FVector_NetQuantize>& HitLocations,
 	                                                       float HitTime);
 
+	/**
+	 * Projectile
+	 */
+	FServerSideRewindResult ProjectileServerSideRewind(ABlasterCharacter* HitCharacter,
+	                                                   const FVector_NetQuantize& TraceStart,
+	                                                   const FVector_NetQuantize& InitialVelocity,
+	                                                   float HitTime);
+
+	/**
+	 * Hitscan
+	 */
 	FServerSideRewindResult ServerSideRewind(ABlasterCharacter* HitCharacter,
 	                                         const FVector_NetQuantize& TraceStart,
 	                                         const FVector_NetQuantize& HitLocation,
@@ -108,11 +122,6 @@ protected:
 	FFramePackage InterpBetweenFrames(const FFramePackage& OlderFrame,
 	                                  const FFramePackage& YoungerFrame,
 	                                  float HitTime);
- 
-	FServerSideRewindResult ConfirmHit(const FFramePackage& Package,
-	                                   ABlasterCharacter* HitCharacter,
-	                                   const FVector_NetQuantize& TraceStart,
-	                                   const FVector_NetQuantize& HitLocation);
 
 	void CacheBoxPositions(ABlasterCharacter* HitCharacter, FFramePackage& OutFramePackage);
 
@@ -127,10 +136,26 @@ protected:
 	/**
 	 * Shotgun 
 	 */
-
 	FShotgunServerSideRewindResult ShotgunConfirmHit(const TArray<FFramePackage>& FramesPackage,
 	                                                 const FVector_NetQuantize& TraceStart,
 	                                                 const TArray<FVector_NetQuantize>& HitLocations);
+
+	/**
+	 * Projectile 
+	 */
+	FServerSideRewindResult ProjectileConfirmHit(const FFramePackage& Package,
+	                                             ABlasterCharacter* HitCharacter,
+	                                             const FVector_NetQuantize& TraceStart,
+	                                             const FVector_NetQuantize& InitialVelocity,
+	                                             float HitTime);
+
+	/**
+	 * Hitscan 
+	 */
+	FServerSideRewindResult ConfirmHit(const FFramePackage& Package,
+	                                   ABlasterCharacter* HitCharacter,
+	                                   const FVector_NetQuantize& TraceStart,
+	                                   const FVector_NetQuantize& HitLocation);
 
 private:
 	UPROPERTY()
