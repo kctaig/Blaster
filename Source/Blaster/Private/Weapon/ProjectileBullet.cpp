@@ -2,9 +2,12 @@
 
 
 #include "Weapon/ProjectileBullet.h"
-#include "GameFramework/Character.h"
+
+#include "BlasterComponents/LagCompensationComponent.h"
+#include "Character/BlasterCharacter.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "PlayerController/BlasterPlayerController.h"
 
 AProjectileBullet::AProjectileBullet()
 {
@@ -36,25 +39,43 @@ void AProjectileBullet::PostEditChangeProperty(struct FPropertyChangedEvent& Eve
 void AProjectileBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
                               FVector NormalImpulse, const FHitResult& Hit)
 {
-	if (ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner()))
+	ABlasterCharacter* OwnerCharacter = Cast<ABlasterCharacter>(GetOwner());
+
+	if (OwnerCharacter)
 	{
-		if (AController* OwnerController = OwnerCharacter->GetController())
+		ABlasterPlayerController* OwnerController = Cast<ABlasterPlayerController>(OwnerCharacter->Controller);
+		if (OwnerController)
 		{
-			UGameplayStatics::ApplyDamage(OtherActor, Damage, OwnerController, this, UDamageType::StaticClass());
+			if (OwnerCharacter->HasAuthority() && !bUseServerSideRewind)
+			{
+				UGameplayStatics::ApplyDamage(OtherActor, Damage, OwnerController, this, UDamageType::StaticClass());
+				Super::OnHit(HitComp, OtherActor, OtherComp, NormalImpulse, Hit);
+				return;
+			}
+			ABlasterCharacter* HitCharacter = Cast<ABlasterCharacter>(OtherActor);
+			if (OwnerCharacter->GetLagCompensation() && OwnerCharacter->IsLocallyControlled() &&
+				HitCharacter && bUseServerSideRewind)
+			{
+				OwnerCharacter->GetLagCompensation()->ProjectileServerScoreRequest(
+					HitCharacter,
+					TraceStart,
+					InitialVelocity,
+					OwnerController->GetServerTime() - OwnerController->SingleTripTime
+				);
+			}
 		}
 	}
-
 	Super::OnHit(HitComp, OtherActor, OtherComp, NormalImpulse, Hit);
 }
 
 void AProjectileBullet::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	/*
 	FPredictProjectilePathParams PathParams;
 	PathParams.bTraceWithChannel = true;
-	PathParams.bTraceWithChannel = true;
+	PathParams.bTraceWithCollision = true;
 	PathParams.DrawDebugTime = 5.f;
 	PathParams.DrawDebugType = EDrawDebugTrace::ForDuration;
 	PathParams.LaunchVelocity = GetActorForwardVector() * InitialSpeed;
